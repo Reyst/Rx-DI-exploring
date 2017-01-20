@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Rx and DI exploring</string>
+    <string name="str_change">Change</string>
+    <string name="str_longitude_caption">Longitude:</string>
+    <string name="str_latitude_caption">Latitude:</string>
+</resources>
