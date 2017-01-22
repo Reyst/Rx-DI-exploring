@@ -3,4 +3,5 @@
     <string name="str_change">Change</string>
     <string name="str_longitude_caption">Longitude:</string>
     <string name="str_latitude_caption">Latitude:</string>
+    <string name="str_test_replay">test replay</string>
 </resources>

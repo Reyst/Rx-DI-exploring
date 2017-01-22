@@ -33,6 +33,9 @@ public class LocationInfoActivity extends AppCompatActivity implements ActivityV
     @BindView(R.id.btn_next)
     Button mBtnNext;
 
+    @BindView(R.id.btn_test_replay)
+    Button mBtnTestReplay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +56,7 @@ public class LocationInfoActivity extends AppCompatActivity implements ActivityV
     }
 
     private void initApp() {
-        ComponentHolder holder = ComponentHolder.getInstance();
-        holder.init(this);
-        holder.getAppComponent().injectTo(this);
-
+        ComponentHolder.getInstance().getAppComponent().injectTo(this);
         mPresenter.onCreate(this);
         mPresenter.changeFragment();
     }
@@ -98,6 +98,17 @@ public class LocationInfoActivity extends AppCompatActivity implements ActivityV
     @OnClick(R.id.btn_next)
     void onNextClick() {
         mPresenter.changeFragment();
+    }
+
+    @OnClick(R.id.btn_test_replay)
+    void onTextReplayClick() {
+        mPresenter.addSubscriber();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
     }
 
     @Override

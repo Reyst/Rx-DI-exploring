@@ -10,4 +10,9 @@ public interface ActivityPresenter {
     void onDestroy();
 
     void changeFragment();
+
+    void onStop();
+
+    void addSubscriber();
+
 }

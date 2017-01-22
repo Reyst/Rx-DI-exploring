@@ -11,7 +11,9 @@ import javax.inject.Inject;
 
 import gsi.reyst.attempt.rl.utils.DataGenerator;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -21,8 +23,6 @@ public class ModelImpl implements Model {
     private static final String TAG = "LOG_ModelImpl";
 
     private LocationManager mLocationManager;
-
-    private PublishSubject<Location> mLatestLocation = PublishSubject.create();
 
     private Observable<Pair<String, String>> mObservable;
 
@@ -36,6 +36,8 @@ public class ModelImpl implements Model {
 
         mLocationManager = locationManager;
 
+        PublishSubject<Location> mLatestLocation = PublishSubject.create();
+
         mGPS = new DataGenerator(mLatestLocation);
         mNET = new DataGenerator(mLatestLocation);
 
@@ -43,15 +45,17 @@ public class ModelImpl implements Model {
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5_000, 5f, mNET);
 
         mObservable = mLatestLocation
-                .subscribeOn(Schedulers.newThread())
+                .doOnSubscribe(consumer -> Log.d(TAG, consumer.getClass().getSimpleName()))
                 .map(location -> {
                     Log.d(TAG, "map");
                     return new Pair<>(
                     String.format(Locale.getDefault(), "%.4f", location.getLatitude()),
                     String.format(Locale.getDefault(), "%.4f", location.getLongitude()));
                 })
-                .publish()
+                //.publish()
+                .replay(1)
                 .autoConnect()
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
 
     }

@@ -1,5 +1,6 @@
 package gsi.reyst.attempt.rl.DI;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import gsi.reyst.attempt.rl.DI.components.AppComponent;
@@ -31,8 +32,8 @@ public class ComponentHolder {
         return mAppComponent.add(new FragmentModule());
     }
 
-    public void init(AppCompatActivity activity) {
-        mAppComponent = DaggerAppComponent.builder().appModule(new AppModule(activity)).build();
+    public void init(Context context) {
+        mAppComponent = DaggerAppComponent.builder().appModule(new AppModule(context)).build();
     }
 
 }
