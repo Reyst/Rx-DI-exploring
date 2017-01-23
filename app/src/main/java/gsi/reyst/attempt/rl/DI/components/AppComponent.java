@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import gsi.reyst.attempt.rl.DI.modules.AppModule;
 import gsi.reyst.attempt.rl.DI.modules.FragmentModule;
+import gsi.reyst.attempt.rl.models.Model;
 import gsi.reyst.attempt.rl.presenters.ActivityPresenterImpl;
 import gsi.reyst.attempt.rl.presenters.FragmentPresenterImpl;
 import gsi.reyst.attempt.rl.views.LocationInfoActivity;
@@ -18,6 +19,8 @@ public interface AppComponent {
     void injectTo(FragmentPresenterImpl presenter);
 
     void injectTo(ActivityPresenterImpl presenter);
+
+    Model getModel();
 
     FragmentComponent add(FragmentModule module);
 

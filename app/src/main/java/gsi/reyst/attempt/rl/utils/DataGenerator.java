@@ -5,15 +5,15 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 public class DataGenerator implements LocationListener {
 
     private static final String TAG = "LOG_";
 
-    private PublishSubject<Location> mLatestLocation;
+    private Subject<Location> mLatestLocation;
 
-    public DataGenerator(PublishSubject<Location> subject) {
+    public DataGenerator(Subject<Location> subject) {
         mLatestLocation = subject;
     }
 

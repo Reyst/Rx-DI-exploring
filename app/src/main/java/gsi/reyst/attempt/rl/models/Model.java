@@ -8,6 +8,8 @@ public interface Model {
 
     Observable<Pair<String, String>> getRxLocation();
 
-    void destroy();
+    void removeListeners();
+
+    void attachListeners();
 
 }

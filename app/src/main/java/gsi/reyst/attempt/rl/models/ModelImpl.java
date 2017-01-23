@@ -15,7 +15,10 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 
 public class ModelImpl implements Model {
@@ -36,15 +39,14 @@ public class ModelImpl implements Model {
 
         mLocationManager = locationManager;
 
-        PublishSubject<Location> mLatestLocation = PublishSubject.create();
+        //mLatestLocation = ReplaySubject.create(1);
+        Subject<Location> locationSubject = BehaviorSubject.create();
 
-        mGPS = new DataGenerator(mLatestLocation);
-        mNET = new DataGenerator(mLatestLocation);
+        mGPS = new DataGenerator(locationSubject);
+        mNET = new DataGenerator(locationSubject);
 
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10_000, 10f, mGPS);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5_000, 5f, mNET);
-
-        mObservable = mLatestLocation
+        mObservable = locationSubject
+                .subscribeOn(Schedulers.newThread())
                 .doOnSubscribe(consumer -> Log.d(TAG, consumer.getClass().getSimpleName()))
                 .map(location -> {
                     Log.d(TAG, "map");
@@ -53,9 +55,8 @@ public class ModelImpl implements Model {
                     String.format(Locale.getDefault(), "%.4f", location.getLongitude()));
                 })
                 //.publish()
-                .replay(1)
-                .autoConnect()
-                .subscribeOn(Schedulers.newThread())
+                //.replay(1)
+                //.autoConnect()
                 .observeOn(AndroidSchedulers.mainThread());
 
     }
@@ -67,8 +68,17 @@ public class ModelImpl implements Model {
 
     @SuppressWarnings("MissingPermission")
     @Override
-    public void destroy() {
+    public void removeListeners() {
+        Log.d(TAG, "removeListeners");
         mLocationManager.removeUpdates(mGPS);
         mLocationManager.removeUpdates(mNET);
+    }
+
+    @SuppressWarnings("MissingPermission")
+    @Override
+    public void attachListeners() {
+        Log.d(TAG, "attachListeners");
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10_000, 10f, mGPS);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5_000, 5f, mNET);
     }
 }

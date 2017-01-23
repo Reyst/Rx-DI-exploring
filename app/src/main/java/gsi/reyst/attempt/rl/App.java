@@ -9,9 +9,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         ComponentHolder holder = ComponentHolder.getInstance();
         holder.init(getApplicationContext());
-
     }
 }

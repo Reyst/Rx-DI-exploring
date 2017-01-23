@@ -37,7 +37,7 @@ public class FragmentPresenterImpl implements FragmentPresenter {
     public void onStop() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
-            //mModel.destroy();
+            //mModel.removeListeners();
         }
     }
 

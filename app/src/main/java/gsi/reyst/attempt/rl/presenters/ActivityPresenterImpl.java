@@ -54,6 +54,7 @@ public class ActivityPresenterImpl implements ActivityPresenter {
 
         mDisp = new CompositeDisposable();
 
+        mModel.attachListeners();
         //noinspection StringBufferReplaceableByString
         mDisposable = mModel.getRxLocation()
                 .doOnNext(data -> Log.d(TAG, new StringBuilder().append(data.first).append(", ").append(data.second).toString()))
@@ -64,7 +65,7 @@ public class ActivityPresenterImpl implements ActivityPresenter {
     public void onDestroy() {
         if (mDisposable != null && !mDisposable.isDisposed()) {
             mDisposable.dispose();
-            //mModel.destroy();
+            mModel.removeListeners();
         }
     }
 
